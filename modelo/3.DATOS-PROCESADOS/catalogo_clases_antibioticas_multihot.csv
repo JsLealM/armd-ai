@@ -1,0 +1,19 @@
+clase_original,frecuencia_filas_exposicion,columna_multihot
+Beta Lactam,4458,exp_prev_beta_lactam
+Fluoroquinolone,3332,exp_prev_fluoroquinolone
+Macrolide Lincosamide,3209,exp_prev_macrolide_lincosamide
+Combination Antibiotic,2064,exp_prev_combination_antibiotic
+Glycopeptide,931,exp_prev_glycopeptide
+Nitroimidazole,929,exp_prev_nitroimidazole
+Tetracycline,842,exp_prev_tetracycline
+Oxazolidinone,711,exp_prev_oxazolidinone
+Aminoglycoside,702,exp_prev_aminoglycoside
+"Polymyxin, Lipopeptide",492,exp_prev_polymyxin_lipopeptide
+Ansamycin,436,exp_prev_ansamycin
+Nitrofuran,280,exp_prev_nitrofuran
+Antitubercular,180,exp_prev_antitubercular
+Monobactam,158,exp_prev_monobactam
+Sulfonamide,108,exp_prev_sulfonamide
+Urinary Antiseptic,28,exp_prev_urinary_antiseptic
+Fosfomycin,19,exp_prev_fosfomycin
+Folate Synthesis Inhibitor,4,exp_prev_folate_synthesis_inhibitor

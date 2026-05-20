@@ -1,0 +1,12 @@
+grupo_multihot,comorbidity_component_original
+comorb_congestive_heart_failure,Congestive heart failure
+comorb_organ_transplant_status,Organ transplant status
+comorb_diabetes_any,Diabetes mellitus without complication
+comorb_diabetes_any,"Diabetes, complicated"
+comorb_diabetes_any,"Diabetes, uncomplicated"
+comorb_solid_tumor_non_metastatic,Solid tumor without metastasis
+comorb_chronic_pulmonary_any,Chronic pulmonary disease
+comorb_chronic_pulmonary_any,Chronic obstructive pulmonary disease and bronchiectasis
+comorb_renal_failure,Renal failure
+comorb_pancreatic_disorder,Pancreatic disorders (excluding diabetes)
+comorb_sinusitis,Sinusitis

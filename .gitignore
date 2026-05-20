@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Env
+.venv/
+venv/
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Frontend
+node_modules/
+dist/
+
+# Backend / logs
+*.log
+
+# Dataset crudo pesado
+modelo/data/
+
+
+# Si mas adelante quieres ignorar tambien imagenes sueltas antiguas de visualizacion,
+# se podria agregar una regla especifica, pero por ahora solo se ignoran los CSV raiz.
+
+# dataset
+modelo/data/

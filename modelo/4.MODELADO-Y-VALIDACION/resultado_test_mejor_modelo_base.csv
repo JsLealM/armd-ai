@@ -1,0 +1,2 @@
+modelo,conjunto,accuracy,balanced_accuracy,precision_macro,recall_macro,f1_macro
+DecisionTree,test,0.5867346938775511,0.6226541170692923,0.47287066591156185,0.6226541170692923,0.4197464510122271

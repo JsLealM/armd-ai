@@ -1,0 +1,20 @@
+name: armd-ai
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - jupyterlab
+  - notebook
+  - ipykernel
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - openpyxl
+  - scipy
+  - statsmodels
+  - xgboost
+  - pip
+  - pip:
+      - missingno

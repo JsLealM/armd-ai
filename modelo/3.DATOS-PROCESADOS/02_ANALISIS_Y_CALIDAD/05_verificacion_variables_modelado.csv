@@ -1,0 +1,21 @@
+variable,tipo,porcentaje_nulos,cardinalidad,decision,justificacion
+prior_infecting_organism_days_to_culture,numerica,100.0,0,excluir,"Quedo completamente vacia en esta version de la base, por lo que no aporta senal real al modelo."
+nursing_home_visit_culture,numerica,99.26,9,excluir,Tiene cerca de 99% de nulos. Mantenerla en esta etapa probablemente agrega mas ruido que informacion.
+prior_organism,categorica,0.0,1,excluir,En esta version de la base quedo sin informacion util por una regla de filtrado demasiado estricta. Debe corregirse antes de usarse.
+implied_susceptibility,categorica,0.0,1,excluir,"Para esta bacteria la fuente consultada llega practicamente vacia, asi que no aporta informacion diferencial en esta version."
+Rule,categorica,0.0,1,excluir,Quedo sin informacion util despues del cruce actual y no justifica entrar al modelo en esta iteracion.
+culture_description,categorica,0.0,3,usar,Tiene fuerte sentido clinico y buena cobertura. El sitio anatomico puede influir en el patron de resistencia.
+antibiotic,categorica,0.0,23,usar,"Es una variable central del problema, porque la resistencia depende del antibiotico evaluado."
+age,categorica,0.0,9,usar,Tiene sentido clinico y buena cobertura. La edad puede relacionarse con comorbilidad y exposicion hospitalaria.
+gender,categorica,0.0,3,usar,Tiene cobertura casi completa y puede mantenerse como variable demografica basica.
+hosp_ward_ICU,binaria,0.0,2,usar,La UCI es clinicamente relevante por mayor presion antibiotica y gravedad del paciente.
+hosp_ward_ER,binaria,0.0,2,usar,Ayuda a distinguir contextos de atencion con diferentes perfiles epidemiologicos.
+hosp_ward_IP,binaria,0.0,2,usar,Es util para separar hospitalizacion de otros contextos de toma de muestra.
+hosp_ward_OP,binaria,0.0,2,usar,Complementa la informacion del entorno clinico y ayuda a diferenciar pacientes ambulatorios.
+median_wbc,numerica,68.42,312,usar con cuidado,"Tiene valor clinico claro, pero la cobertura es baja y exigira imputacion dentro del pipeline de modelado."
+median_cr,numerica,68.36,415,usar con cuidado,"Es una variable clinica relevante, aunque tambien presenta muchos faltantes y no debe interpretarse sin cautela."
+time_to_culturetime,numerica,29.77,1113,usar con cuidado,"Puede aportar informacion temporal sobre exposicion previa, pero tiene nulos y requiere tratamiento dentro del pipeline."
+ordering_mode,categorica,14.71,2,usar con cuidado,"Tiene valor operativo, pero presenta alrededor de 15% de nulos y puede requerir imputacion controlada."
+order_time_jittered_utc,temporal,0.0,8367,usar con cuidado,Sirve para hacer la particion temporal y evitar data leakage. No debe entrar como predictor crudo al modelo final.
+antibiotic_class,categorica,0.0,18,usar con cuidado,"Tiene sentido clinico, pero una parte importante de los registros no trae antecedente de exposicion antibiotica."
+procedure_name,categorica,0.0,7,usar con cuidado,"Tiene sentido clinico, pero originalmente venia con mucho faltante y fue necesario rellenarla como categoria explicita."
