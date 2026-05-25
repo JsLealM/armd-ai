@@ -1,125 +1,177 @@
 # FRONTEND ARCHITECTURE - ARMD-AI
 
-## 1. Objetivo del frontend
+## 1. Objetivo
 
-El frontend no sera un sistema clinico productivo.
+El frontend sera un **miniprototipo academico** en `React + Vite`.
 
-En esta etapa sera un **miniprototipo de exposicion** para mostrar:
+No es una app clinica productiva. Su funcion es mostrar:
 
-- el contexto del proyecto
-- el flujo de limpieza y analisis del dataset
+- el problema del proyecto
+- el flujo de limpieza y analisis
 - las graficas mas importantes
-- las decisiones metodologicas
-- las variantes del dataset usadas para modelado
+- las `5` variantes del dataset para modelado
+- los resultados de los modelos probados
 
-Tecnologia decidida:
+La variable objetivo del proyecto y del modelado es:
 
-- `React`
-- `Vite`
+- `susceptibility`
 
-## 2. Tipo de frontend que se va a construir
+## 2. Estructura general del frontend
 
-El frontend sera una aplicacion de **dos paginas principales** montada con `React + Vite`.
+La recomendacion final es:
 
-No necesita:
+- `1` frontend
+- `2` paginas principales
+- `1` narrativa analitica centrada en `susceptibility`
 
-- autenticacion
-- backend propio
-- base de datos
-- formularios complejos
-- consumo de API en tiempo real
+No hace falta crear varios dashboards separados. Lo correcto es una sola app con dos rutas:
 
-Si necesita:
+1. `/`
+2. `/modelos`
 
-- buena narrativa visual
-- estructura clara
-- imagenes legibles
-- textos cortos debajo de cada grafica
-- navegacion simple
-- una pagina para analisis visual
-- una pagina para resultados de modelos
+## 3. Paginas
 
-## 3. Objetivo academico del prototipo
+### 3.1. Ruta `/`
 
-El prototipo debe dejar claro:
+Es la pagina principal del analisis visual.
 
-1. de donde salen los datos
-2. como se filtraron y limpiaron
-3. por que se eligieron ciertas variables
-4. como se ven los patrones mas importantes del dataset
-5. que variantes de dataset quedaron listas para modelado
+Debe responder:
 
-El frontend no debe parecer una app clinica final.
+- de donde salieron los datos
+- como se limpiaron
+- que calidad real tienen
+- por que se eligieron ciertas variables
+- como se comporta `susceptibility`
 
-Debe parecer una **demo academica elegante y clara** del proyecto `ARMD-AI`.
+### 3.2. Ruta `/modelos`
 
-## 4. Informacion que debe mostrar
-
-### 4.1. Seccion de portada
+Es la pagina de resultados del modelado.
 
 Debe mostrar:
 
-- nombre del proyecto: `ARMD-AI`
-- subtitulo corto
-- bacteria objetivo: `Staphylococcus aureus`
-- problema: prediccion de `susceptibility`
-- tecnologias principales:
-  - analisis en `JupyterLab`
-  - modelado en `Python`
-  - frontend en `React + Vite`
+- las `5` versiones del dataset
+- una tabla comparativa de scores
+- una matriz de confusion opcional del mejor modelo
 
-### 4.2. Seccion de contexto del dataset
+## 4. Graficas oficiales para la pagina principal
+
+La seleccion final queda centrada en `susceptibility`.
+
+Estas son las `8` graficas oficiales:
+
+1. `expo_01_resumen_limpieza.png`
+2. `expo_02_objetivo_antes_despues.png`
+3. `expo_11_faltantes_semanticos.png`
+4. `expo_04_decision_variables.png`
+5. `expo_08_cultivo_vs_susceptibilidad.png`
+6. `expo_09_edad_vs_susceptibilidad.png`
+7. `expo_12_heatmap_correlacion_modelado_completo.png`
+8. `expo_13_boxplot_wbc_por_susceptibility.png`
+
+## 5. Graficas de respaldo
+
+Estas no son obligatorias en la pagina principal, pero sirven como apoyo:
+
+- `expo_03_nulos_antes_despues.png`
+- `expo_05_boxplot_median_wbc.png`
+- `expo_06_boxplot_median_cr.png`
+- `expo_07_top_antibioticos.png`
+- `expo_10_entorno_hospitalario.png`
+
+## 6. Logica de la seleccion
+
+La pagina principal debe contar esta historia:
+
+1. cuanto se limpio el dataset
+2. como quedo la variable objetivo
+3. por que no basta con mirar solo `NaN`
+4. como se decidieron las variables
+5. como cambia `susceptibility` segun el tipo de cultivo
+6. como cambia `susceptibility` segun la edad
+7. como se correlacionan todas las variables finales del modelado
+8. como se comporta `median_wbc` segun cada clase de `susceptibility`
+
+## 7. Secciones de la ruta `/`
+
+Orden recomendado:
+
+1. `HeroSection`
+2. `DatasetContextSection`
+3. `CleaningSection`
+4. `DataQualitySection`
+5. `VariableSelectionSection`
+6. `SusceptibilityBehaviorSection`
+7. `ConclusionSection`
+
+### 7.1. `HeroSection`
+
+Debe mostrar:
+
+- nombre del proyecto `ARMD-AI`
+- bacteria objetivo `Staphylococcus aureus`
+- problema central: prediccion de `susceptibility`
+- tecnologias: `JupyterLab`, `Python`, `React + Vite`
+
+### 7.2. `DatasetContextSection`
 
 Debe explicar:
 
-- que el dataset original ARMD venia en multiples CSV
-- que no se uso todo indiscriminadamente
+- que el dataset ARMD venia en multiples CSV
+- que no se usaron todos indiscriminadamente
 - que se filtro temprano por `S. aureus`
-- que el trabajo se enfoco solo en prediccion de susceptibilidad antibiotica
+- que la unidad analitica se trabajo alrededor de `order_proc_id_coded`
 
-### 4.3. Seccion de limpieza y calidad de datos
+### 7.3. `CleaningSection`
 
-Debe mostrar estas graficas:
+Debe usar:
 
 - `expo_01_resumen_limpieza.png`
 - `expo_02_objetivo_antes_despues.png`
+
+### 7.4. `DataQualitySection`
+
+Debe usar:
+
 - `expo_11_faltantes_semanticos.png`
 
-Y texto corto para responder:
+Mensaje clave:
 
-- cuantas filas habia antes y despues
-- que paso con la variable objetivo
-- por que `NaN` no era suficiente para medir calidad
+- una variable puede no tener `NaN` y aun asi no tener buena cobertura real
 
-### 4.4. Seccion de seleccion de variables
+### 7.5. `VariableSelectionSection`
 
-Debe mostrar:
+Debe usar:
 
 - `expo_04_decision_variables.png`
 
-Y explicar:
+### 7.6. `SusceptibilityBehaviorSection`
 
-- que variables se usan
-- cuales se usan con cuidado
-- cuales se excluyen
-
-### 4.5. Seccion de comportamiento de los datos
-
-Debe mostrar estas graficas:
+Debe usar:
 
 - `expo_08_cultivo_vs_susceptibilidad.png`
-- `expo_10_entorno_hospitalario.png`
-- `expo_05_boxplot_median_wbc.png`
+- `expo_09_edad_vs_susceptibilidad.png`
+- `expo_12_heatmap_correlacion_modelado_completo.png`
+- `expo_13_boxplot_wbc_por_susceptibility.png`
 
-Esta parte es importante porque muestra:
+Esta es la seccion mas importante para el frontend, porque ya muestra el comportamiento de la variable objetivo.
 
-- diferencias por tipo de cultivo
-- composicion del entorno hospitalario
-- presencia de dispersion y valores raros en una variable clinica
+### 7.7. `ConclusionSection`
 
-### 4.6. Seccion de variantes de modelado
+Debe cerrar con:
 
-Debe explicar las `5` versiones del dataset:
+- que el dataset ya quedo listo para modelado
+- que existen `5` variantes de entrenamiento
+- que el siguiente paso es comparar modelos y scores
+
+## 8. Pagina `/modelos`
+
+No debe repetir las imagenes del analisis.
+
+Debe contener solo:
+
+### 8.1. Apartado de variantes
+
+Las `5` versiones:
 
 1. `base`
 2. `ampliada`
@@ -127,539 +179,94 @@ Debe explicar las `5` versiones del dataset:
 4. `multihot_comorb`
 5. `multihot_abx_comorb`
 
-Esto no necesita un grafico obligatorio.
+### 8.2. Tabla de resultados
 
-Puede resolverse con:
+Columnas sugeridas:
 
-- tarjetas
-- tabla simple
-- timeline horizontal
-
-### 4.7. Seccion final
-
-Debe cerrar con:
-
-- estado actual del proyecto
-- que ya existe para modelado
-- que sigue despues
-
-## 5. Arquitectura recomendada del frontend
-
-## 5.1. Estructura general
-
-Se recomienda esta estructura minima:
-
-```text
-src/
-  assets/
-    expo/
-  components/
-    layout/
-    sections/
-    ui/
-  data/
-  pages/
-    HomePage.jsx
-    ModelsPage.jsx
-  App.jsx
-  main.jsx
-```
-
-## 5.2. Carpetas recomendadas
-
-### `assets/expo/`
-
-Aqui deben vivir las imagenes `.png` seleccionadas para el frontend.
-
-Seleccion final para la pagina principal:
-
-- `expo_01_resumen_limpieza.png`
-- `expo_02_objetivo_antes_despues.png`
-- `expo_04_decision_variables.png`
-- `expo_08_cultivo_vs_susceptibilidad.png`
-- `expo_10_entorno_hospitalario.png`
-- `expo_11_faltantes_semanticos.png`
-- `expo_05_boxplot_median_wbc.png`
-
-Graficas de respaldo, por si el frontend necesita una seccion extra o una pestaña secundaria:
-
-- `expo_03_nulos_antes_despues.png`
-- `expo_06_boxplot_median_cr.png`
-- `expo_07_top_antibioticos.png`
-- `expo_09_edad_vs_susceptibilidad.png`
-
-### `components/layout/`
-
-Componentes estructurales:
-
-- `Navbar`
-- `PageShell`
-- `SectionContainer`
-- `Footer`
-
-### `components/sections/`
-
-Secciones grandes de la pagina:
-
-- `HeroSection`
-- `DatasetContextSection`
-- `CleaningSection`
-- `VariableSelectionSection`
-- `BehaviorSection`
-- `ModelVariantsSection`
-- `ConclusionSection`
-
-### `components/ui/`
-
-Piezas reutilizables:
-
-- `MetricCard`
-- `InfoCard`
-- `ImagePanel`
-- `SectionTitle`
-- `Timeline`
-- `VariantTable`
-
-### `data/`
-
-Aqui conviene centralizar textos y configuraciones para no quemarlos dentro de JSX.
-
-Ejemplos:
-
-- `projectSummary.js`
-- `chartsConfig.js`
-- `modelVariants.js`
-
-## 6. Paginas recomendadas
-
-Se recomiendan estas dos rutas:
-
-### Ruta 1: `/`
-
-Pagina principal de analisis y narrativa visual.
-
-Debe contener:
-
-- hero
-- contexto del dataset
-- limpieza
-- calidad real
-- seleccion de variables
-- comportamiento y tendencias
-- cierre del proyecto
-
-Orden recomendado de graficas en esta pagina:
-
-1. `expo_01_resumen_limpieza.png`
-2. `expo_02_objetivo_antes_despues.png`
-3. `expo_11_faltantes_semanticos.png`
-4. `expo_04_decision_variables.png`
-5. `expo_08_cultivo_vs_susceptibilidad.png`
-6. `expo_10_entorno_hospitalario.png`
-7. `expo_05_boxplot_median_wbc.png`
-
-Esta seleccion busca que la pagina cuente una historia clara:
-
-1. cuanto se limpio
-2. como quedo la variable objetivo
-3. por que no basta con mirar solo `NaN`
-4. como se eligieron variables
-5. como cambia la susceptibilidad segun el tipo de cultivo
-6. de que entornos hospitalarios viene la cohorte
-7. donde hay dispersion y valores atipicos en una variable clinica importante
-
-### Ruta 2: `/modelos`
-
-Pagina de resultados de modelado.
-
-Debe contener:
-
-- un apartado claro con las `5` variantes del dataset
-- una tabla comparativa de resultados
-- una matriz de confusion como apoyo visual opcional
-
-Esta pagina no necesita usar las graficas `expo_*.png` del analisis.
-Debe centrarse en:
-
-- explicar las `5` versiones del dataset:
-  - `base`
-  - `ampliada`
-  - `multihot_abx`
-  - `multihot_comorb`
-  - `multihot_abx_comorb`
-- una tabla tipo:
-  - version del dataset
-  - mejor modelo
-  - `accuracy`
-  - `balanced_accuracy`
-  - `f1_macro`
-- una matriz de confusion del mejor modelo elegido, si luego se exporta desde el notebook `08`
-
-No se prioriza para esta pagina:
-
-- una lista larga de todos los modelos con mucho detalle
-- demasiadas tarjetas numericas
-- repetir las graficas `expo_*.png` de la pagina principal
-
-## 7. Decision final sobre graficas
-
-Para esta version del frontend, las graficas oficiales a usar seran `7`:
-
-1. `expo_01_resumen_limpieza.png`
-2. `expo_02_objetivo_antes_despues.png`
-3. `expo_11_faltantes_semanticos.png`
-4. `expo_04_decision_variables.png`
-5. `expo_08_cultivo_vs_susceptibilidad.png`
-6. `expo_10_entorno_hospitalario.png`
-7. `expo_05_boxplot_median_wbc.png`
-
-No se priorizan en la pagina principal:
-
-- `expo_03_nulos_antes_despues.png`
-  porque `expo_11` explica mejor la calidad real de la informacion
-- `expo_06_boxplot_median_cr.png`
-  porque con un solo boxplot bien explicado suele bastar
-- `expo_07_top_antibioticos.png`
-  porque aporta contexto, pero no es tan fuerte como `expo_08`
-- `expo_09_edad_vs_susceptibilidad.png`
-  porque hoy la narrativa visual principal ya queda mejor balanceada con cultivo, entorno y calidad
-
-## 7. Secciones recomendadas en pantalla
-
-## 7.1. Hero
-
-Contenido:
-
-- titulo fuerte
-- descripcion corta
-- una frase del problema
-- chips o etiquetas con:
-  - `S. aureus`
-  - `Susceptibility`
-  - `React + Vite`
-  - `JupyterLab`
-
-## 7.2. Flujo del proyecto
-
-Mostrar un mini flujo tipo:
-
-`Dataset crudo -> Filtrado -> Limpieza -> Analisis -> Variantes de modelado`
-
-## 7.3. Calidad de datos
-
-Mostrar 2 o 3 tarjetas resumen:
-
-- registros antes y despues
-- clases objetivo finales
-- idea de cobertura real
-
-Luego mostrar las graficas clave.
-
-## 7.4. Variables importantes
-
-Mostrar:
-
-- una explicacion corta
-- la grafica de decision de variables
-- una lista corta de variables retenidas
-
-## 7.5. Comportamiento y tendencias
-
-Esta seccion debe verse mas analitica.
-
-Debe contener:
-
-- tipo de cultivo vs susceptibility
-- tendencia por edad
-- tendencia por `median_wbc`
-
-## 7.6. Variantes para modelado
-
-Mostrar las `5` variantes de forma visual:
-
-- nombre
-- idea
-- que agrega respecto a la anterior
-
-Ejemplo:
-
-- `base`: variables mas solidas
-- `ampliada`: agrega variables clinicas con cuidado
-- `multihot_abx`: agrega exposicion antibiotica previa
-- `multihot_comorb`: agrega comorbilidades reducidas
-- `multihot_abx_comorb`: combina ambas familias
-
-## 7.7. Pagina de modelos y scores
-
-La pagina `/modelos` debe organizarse en bloques claros:
-
-### Resumen superior
-
-- objetivo del modelado
-- metrica principal
-- cantidad de variantes del dataset comparadas
-
-### Tabla de variantes del dataset
-
-Debe mostrar:
-
-- nombre de la variante
-- que variables agrega
-- numero de columnas
-
-### Tabla de resultados
-
-Debe mostrar, por cada modelo probado:
-
-- nombre del modelo
-- dataset usado
+- `version_dataset`
+- `mejor_modelo`
 - `accuracy`
 - `balanced_accuracy`
 - `f1_macro`
 
-### Bloque de mejor resultado
+### 8.3. Matriz de confusion
 
-Debe dejar visible:
+Opcional, pero recomendable como apoyo visual del mejor modelo final.
 
-- mejor modelo por cada dataset
-- mejor variante global segun la metrica principal
+## 9. Estructura de carpetas
 
-### Nota metodologica
-
-Debe recordar:
-
-- que `accuracy` sola no basta
-- que el problema esta desbalanceado
-- que interesa especialmente el comportamiento de `Intermediate`
-
-## 8. Componentes recomendados
-
-## 8.1. `ImagePanel`
-
-Debe recibir:
-
-- `title`
-- `image`
-- `caption`
-- `insight`
-
-Uso:
-
-- mostrar una grafica con una explicacion corta debajo
-
-## 8.2. `MetricCard`
-
-Debe mostrar:
-
-- numero grande
-- etiqueta
-- contexto corto
-
-Ejemplos:
-
-- `82,519` registros antes
-- `82,319` registros despues
-- `5` datasets finales de modelado
-
-## 8.3. `VariantTable` o `VariantCards`
-
-Debe mostrar las cinco versiones de dataset de forma clara.
-
-## 8. Componentes recomendados para la pagina de modelos
-
-### `ResultsTable`
-
-Para mostrar resultados comparativos por dataset y por algoritmo.
-
-### `ScoreCard`
-
-Para destacar:
-
-- mejor `balanced_accuracy`
-- mejor `f1_macro`
-- mejor modelo global
-
-### `DatasetVariantCard`
-
-Para explicar de forma visual cada una de las 5 variantes.
-
-## 9. Datos que pueden quedar hardcodeados
-
-Para esta fase esta bien dejar hardcodeado:
-
-- textos cortos
-- resumenes numericos
-- configuracion de tarjetas
-- rutas de imagenes
-- nombres de variantes del modelo
-
-No hace falta una API.
-
-## 10. Que no se recomienda hacer
-
-No conviene:
-
-- meter demasiadas graficas en una sola vista
-- usar todas las imagenes existentes
-- llenar la pagina de texto largo
-- simular features clinicos que no existen todavia
-- convertir el prototipo en dashboard con demasiados filtros
-
-## 11. Graficas recomendadas para la pagina principal del frontend
-
-Estas son las `7` principales:
-
-1. `expo_01_resumen_limpieza.png`
-2. `expo_02_objetivo_antes_despues.png`
-3. `expo_04_decision_variables.png`
-4. `expo_08_cultivo_vs_susceptibilidad.png`
-5. `expo_11_faltantes_semanticos.png`
-6. `expo_12_tendencia_edad_resistencia.png`
-7. `expo_13_tendencia_wbc_resistencia.png`
-
-Graficas de respaldo:
-
-- `expo_03_nulos_antes_despues.png`
-- `expo_05_boxplot_median_wbc.png`
-- `expo_06_boxplot_median_cr.png`
-- `expo_07_top_antibioticos.png`
-- `expo_09_edad_vs_susceptibilidad.png`
-- `expo_10_entorno_hospitalario.png`
-- `expo_14_tendencia_cr_resistencia.png`
-
-## 12. Datos recomendados para la pagina `/modelos`
-
-La pagina de modelos deberia apoyarse en estos archivos:
-
-- `modelo/4.MODELADO-Y-VALIDACION/resultados_validacion_modelos_base.csv`
-- `modelo/4.MODELADO-Y-VALIDACION/resultado_test_mejor_modelo_base.csv`
-
-Y, a medida que se ejecuten las demas variantes:
-
-- `resultados_validacion_modelos_ampliada.csv`
-- `resultados_validacion_modelos_multihot_abx.csv`
-- `resultados_validacion_modelos_multihot_comorb.csv`
-- `resultados_validacion_modelos_multihot_abx_comorb.csv`
-
-Idealmente, despues se puede consolidar todo en un solo JSON o CSV resumen para el frontend.
-
-## 13. Estructura general del proyecto recomendada
-
-La recomendacion es **no juntar backend y modelo**.
-
-Lo mas limpio es:
+Se recomienda esta estructura minima:
 
 ```text
 frontend/
-backend/
-modelo/
+  src/
+    assets/
+      expo/
+    components/
+      layout/
+      sections/
+      ui/
+    data/
+    pages/
+      HomePage.jsx
+      ModelsPage.jsx
+    App.jsx
+    main.jsx
 ```
 
-### `frontend/`
+## 10. Componentes sugeridos
 
-Debe contener la app `React + Vite`.
+### `ImagePanel`
 
-### `backend/`
+Para mostrar:
 
-Debe contener la API en `FastAPI`.
+- titulo
+- imagen
+- texto corto
+- mensaje clave
 
-### `modelo/`
+### `SectionTitle`
 
-Debe contener:
+Para mantener consistencia visual.
 
-- notebooks
-- scripts de analisis
-- scripts de modelado
-- datos procesados
-- imagenes de exposicion
+### `VariantCards`
 
-### Por que no conviene juntar `backend` y `modelo`
+Para explicar las `5` versiones del dataset.
 
-Porque cumplen papeles distintos:
+### `ResultsTable`
 
-- `backend` expone endpoints
-- `modelo` concentra investigacion, notebooks, datasets, scripts y experimentos
+Para los scores de la pagina `/modelos`.
 
-Si mezclas ambos desde el inicio:
+## 11. Archivos de referencia
 
-- se ensucian responsabilidades
-- se vuelve mas dificil mantener rutas
-- se complica la evolucion futura del proyecto
+Para construir el frontend se deben respetar estos archivos:
 
-## 14. Estrategia recomendada de reorganizacion
-
-Como el proyecto ya tiene muchos archivos y notebooks funcionando, no conviene mover todo agresivamente hoy.
-
-La estrategia correcta es:
-
-1. crear las carpetas nuevas:
-   - `frontend/`
-   - `backend/`
-   - `modelo/`
-2. dejar documentado que `modelo/` sera el nuevo hogar del trabajo analitico
-3. mover de forma gradual cuando ya se quiera estabilizar rutas
-
-En esta etapa, lo mas seguro es:
-
-- crear la estructura nueva
-- no romper el trabajo actual
-- luego migrar con calma
-
-## 15. Archivos del proyecto que el frontend debe respetar
-
-Para entender el contenido, el frontend debe tomar como referencia estos archivos:
-
+- `frontend/TEXTOS_GRAFICAS_FRONTEND.md`
 - `GUIA_CORTA_EXPOSICION_DATASET.md`
 - `RESUMEN_ENTRENAMIENTOS_MODELO.md`
 - `ACLARACIONES_CONSISTENCIA_MODELO.md`
-- `modelo/2.VISUALIZACION-DATOS/exposicion_analisis_visual_armd.ipynb`
+- `modelo/2.VISUALIZACION-DATOS/03_exposicion_analisis_visual_armd.ipynb`
 
-Y para las imagenes:
+Y las imagenes salen de:
 
-- carpeta `modelo/2.VISUALIZACION-DATOS/EXPOSICION`
+- `modelo/2.VISUALIZACION-DATOS/EXPOSICION/`
 
-## 16. Propuesta de narrativa visual
+## 12. Notebook actualizado para estas graficas
 
-Orden recomendado:
+Las graficas nuevas centradas en `susceptibility` quedaron integradas en:
 
-1. problema
-2. dataset
-3. limpieza
-4. calidad real
-5. variables seleccionadas
-6. comportamiento de los datos
-7. versiones de modelado
-8. siguiente paso
+- `modelo/2.VISUALIZACION-DATOS/03_exposicion_analisis_visual_armd.ipynb`
 
-Ese orden ayuda a que el profesor entienda:
+Graficas nuevas agregadas ahi:
 
-- primero la base
-- luego la evidencia
-- despues el modelado
+- `expo_12_heatmap_correlacion_modelado_completo.png`
+- `expo_13_boxplot_wbc_por_susceptibility.png`
 
-## 17. Estado actual del frontend
+## 13. Decision final
 
-En este momento este documento solo define la arquitectura y el contexto.
+El frontend queda asi:
 
-Todavia faltaria:
-
-- crear el proyecto `React + Vite`
-- definir `React Router`
-- copiar las imagenes seleccionadas
-- construir componentes
-- maquetar las dos paginas
-- conectar los textos e imagenes
-- preparar la tabla de scores
-
-## 18. Siguiente paso recomendado
-
-El siguiente paso correcto seria:
-
-1. crear el proyecto con `Vite`
-2. instalar y configurar `React Router`
-3. crear las dos paginas:
-   - `HomePage`
-   - `ModelsPage`
-4. cargar las `7` graficas clave en la pagina principal
-5. preparar una tabla inicial de scores en la pagina de modelos
-
+- `1` app en `React + Vite`
+- `2` paginas principales
+- pagina `/` enfocada en analisis y comportamiento de `susceptibility`
+- pagina `/modelos` enfocada en variantes, scores y matriz de confusion

@@ -1,0 +1,21 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+.grid > *:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  max-width: 50%;
+  justify-self: center;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid > *:last-child:nth-child(odd) {
+    max-width: 100%;
+  }
+}

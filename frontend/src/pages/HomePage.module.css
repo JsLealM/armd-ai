@@ -1,0 +1,26 @@
+.contextParagraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 640px;
+}
+
+.hidden .contextP {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.visible .contextP {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contextP {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 320;
+  line-height: 1.55;
+  letter-spacing: -0.26px;
+}

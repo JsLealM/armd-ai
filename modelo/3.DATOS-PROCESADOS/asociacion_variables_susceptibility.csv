@@ -1,0 +1,16 @@
+variable,tipo,metrica,asociacion
+antibiotic,categorica,cramers_v,0.42065174954835866
+antibiotic_class,categorica,cramers_v,0.0834905390477122
+age,categorica,cramers_v,0.07411424080878552
+hosp_ward_ICU,categorica,cramers_v,0.0719444779758782
+hosp_ward_ER,categorica,cramers_v,0.06270922934240587
+procedure_name,categorica,cramers_v,0.06080634170121363
+ordering_mode,categorica,cramers_v,0.04962046457210081
+culture_description,categorica,cramers_v,0.047268630642835874
+time_to_culturetime,numerica,eta,0.04638815395446351
+median_cr,numerica,eta,0.0343779125663544
+hosp_ward_IP,categorica,cramers_v,0.027276739692879193
+hosp_ward_OP,categorica,cramers_v,0.022259447964830988
+median_wbc,numerica,eta,0.014497486712384973
+nursing_home_visit_culture,numerica,eta,0.005290993558165848
+gender,categorica,cramers_v,0.004618217590296739

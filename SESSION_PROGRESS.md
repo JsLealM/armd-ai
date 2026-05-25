@@ -908,4 +908,73 @@ Motivo:
 - el usuario necesita apoyo para exposicion
 - varios terminos del proyecto no eran obvios en ingles
 
+### Ajuste final de frontend centrado en susceptibility
+
+Se redefinio la seleccion oficial de graficas del frontend para que la narrativa quede centrada en la variable objetivo `susceptibility`.
+
+Cambios principales:
+
+- se actualizo `frontend/FRONTEND_ARCHITECTURE.md`
+- se actualizo `frontend/TEXTOS_GRAFICAS_FRONTEND.md`
+- se modifico `modelo/2.VISUALIZACION-DATOS/03_exposicion_analisis_visual_armd.ipynb`
+
+Graficas nuevas agregadas al notebook `03`:
+
+- `expo_12_heatmap_correlacion_modelado_completo.png`
+- `expo_13_boxplot_wbc_por_susceptibility.png`
+
+Archivo nuevo generado desde el notebook `03`:
+
+- `modelo/3.DATOS-PROCESADOS/matriz_correlacion_modelado_completo.csv`
+- `modelo/3.DATOS-PROCESADOS/correlacion_con_susceptibility_modelado_completo.csv`
+
+Decision final de frontend:
+
+- `1` frontend en `React + Vite`
+- `2` paginas principales: `/` y `/modelos`
+- pagina `/` con `8` graficas oficiales centradas en `susceptibility`
+- pagina `/modelos` con `5` variantes del dataset, tabla de scores y matriz de confusion opcional
+
+### Ajuste del heatmap solicitado por el usuario
+
+El usuario pidio un heatmap mas parecido a un mapa de correlacion clasico donde se vieran **todas las variables finales del modelado**.
+
+Se reemplazo el enfoque anterior de `expo_12` por uno nuevo:
+
+- base usada: `armd_s_aureus_base_modelado_multihot_abx_comorb.csv`
+- se excluyen solo identificadores tecnicos
+- las variables categoricas se codifican numericamente para visualizacion
+- `susceptibility` se codifica como `0`, `1`, `2` solo para esta grafica
+
+Resultado:
+
+- el notebook `03` ahora genera un heatmap completo de correlacion del dataset final
+- tambien exporta un CSV con las correlaciones ordenadas respecto a `susceptibility`
+
+### Documento de defensa clinica de variables
+
+Se creo el archivo:
+
+- `JUSTIFICACION_VARIABLES_CLINICAS.md`
+
+Objetivo:
+
+- ayudar al usuario a defender por que se eligieron las variables del modelo
+- conectar las variables con plausibilidad clinica y biologica
+- dejar frases cortas para exposicion
+- incluir fuentes de respaldo como CDC, WHO, ATS/IDSA, CLSI, Merck y literatura sobre MRSA
+
+Contenido principal:
+
+- variable objetivo `susceptibility`
+- `antibiotic`
+- `culture_description`
+- variables demograficas
+- entorno hospitalario
+- laboratorios
+- exposicion antibiotica previa
+- comorbilidades
+- variables usadas con cuidado
+- variables excluidas o no priorizadas
+
 
