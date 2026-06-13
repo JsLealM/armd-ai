@@ -1,0 +1,65 @@
+variable,decision,motivo
+ordering_mode,usar,variable candidata para modelado
+culture_description,usar,variable candidata para modelado
+organism,usar,variable candidata para modelado
+antibiotic,usar,variable candidata para modelado
+age,usar,variable candidata para modelado
+gender,usar,variable candidata para modelado
+hosp_ward_IP,usar,variable candidata para modelado
+hosp_ward_OP,usar,variable candidata para modelado
+hosp_ward_ER,usar,variable candidata para modelado
+hosp_ward_ICU,usar,variable candidata para modelado
+adi_score,usar,variable candidata para modelado
+adi_state_rank,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_heartrate,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_resprate,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_temp,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_sysbp,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_diasbp,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_wbc,usar,variable candidata para modelado
+median_neutrophils,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_lymphocytes,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+median_bun,usar,variable candidata para modelado
+median_cr,usar,variable candidata para modelado
+median_lactate,usar,variable candidata para modelado
+median_procalcitonin,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+missing_adi_score,excluir,"identificador, constante o sin variabilidad util"
+missing_adi_state_rank,excluir,"identificador, constante o sin variabilidad util"
+missing_median_temp,usar,variable candidata para modelado
+missing_median_heartrate,usar,variable candidata para modelado
+missing_median_resprate,usar,variable candidata para modelado
+missing_median_sysbp,usar,variable candidata para modelado
+missing_median_diasbp,usar,variable candidata para modelado
+missing_median_wbc,usar,variable candidata para modelado
+missing_median_cr,usar,variable candidata para modelado
+missing_median_bun,usar,variable candidata para modelado
+missing_median_lactate,usar,variable candidata para modelado
+missing_median_procalcitonin,usar,variable candidata para modelado
+missing_median_neutrophils,usar,variable candidata para modelado
+missing_median_lymphocytes,usar,variable candidata para modelado
+exp_prev_aminoglycoside,usar,variable candidata para modelado
+exp_prev_ansamycin,usar,variable candidata para modelado
+exp_prev_antitubercular,usar,variable candidata para modelado
+exp_prev_beta_lactam,usar,variable candidata para modelado
+exp_prev_combination_antibiotic,usar,variable candidata para modelado
+exp_prev_fluoroquinolone,usar,variable candidata para modelado
+exp_prev_folate_synthesis_inhibitor,usar_con_cuidado,"faltantes altos, valor dominante o posible multicolinealidad"
+exp_prev_fosfomycin,usar,variable candidata para modelado
+exp_prev_glycopeptide,usar,variable candidata para modelado
+exp_prev_macrolide_lincosamide,usar,variable candidata para modelado
+exp_prev_monobactam,usar,variable candidata para modelado
+exp_prev_nitrofuran,usar,variable candidata para modelado
+exp_prev_nitroimidazole,usar,variable candidata para modelado
+exp_prev_oxazolidinone,usar,variable candidata para modelado
+exp_prev_polymyxin_lipopeptide,usar,variable candidata para modelado
+exp_prev_sulfonamide,usar,variable candidata para modelado
+exp_prev_tetracycline,usar,variable candidata para modelado
+exp_prev_urinary_antiseptic,usar,variable candidata para modelado
+comorb_chronic_pulmonary_any,usar,variable candidata para modelado
+comorb_congestive_heart_failure,usar,variable candidata para modelado
+comorb_diabetes_any,usar,variable candidata para modelado
+comorb_organ_transplant_status,usar,variable candidata para modelado
+comorb_pancreatic_disorder,excluir,"identificador, constante o sin variabilidad util"
+comorb_renal_failure,usar,variable candidata para modelado
+comorb_sinusitis,usar,variable candidata para modelado
+comorb_solid_tumor_non_metastatic,usar,variable candidata para modelado

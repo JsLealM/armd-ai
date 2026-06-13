@@ -977,4 +977,384 @@ Contenido principal:
 - variables usadas con cuidado
 - variables excluidas o no priorizadas
 
+### Cambio de alcance propuesto: multibacteria y mejores variables
+
+El usuario regreso con retroalimentacion del profesor:
+
+- usar mas de una bacteria para entrenar el modelo
+- mejorar preprocesamiento y limpieza
+- usar mejores datos para la prediccion
+- terminar avances durante la semana
+
+Se reviso `microbiology_cultures_cohort.csv` por streaming, sin cargar todo en RAM.
+
+Top organismos con clases validas:
+
+- `ESCHERICHIA COLI`: 874,189 filas validas
+- `KLEBSIELLA PNEUMONIAE`: 151,805
+- `STAPHYLOCOCCUS AUREUS`: 82,319
+- `PROTEUS MIRABILIS`: 67,742
+- `ENTEROCOCCUS SPECIES`: 64,463
+- `PSEUDOMONAS AERUGINOSA`: 48,660
+
+Se creo el documento:
+
+- `PLAN_MEJORA_MULTIBACTERIA_PREPROCESAMIENTO.md`
+
+Decision recomendada:
+
+- no destruir el pipeline anterior de `S. aureus`
+- crear una version nueva `v2_multibacteria`
+- empezar con 6 organismos principales
+- incluir `organism` como variable predictora
+- mejorar variables con `adi_scores`, `vitals`, labs seleccionados, exposicion antibiotica previa y comorbilidades reducidas
+- auditar antes de usar `microbiology_cultures_microbial_resistance.csv` por riesgo de fuga de informacion
+
+Notebooks nuevos recomendados:
+
+- `09_exploracion_multibacteria_armd.ipynb`
+- `10_construccion_dataset_multibacteria.ipynb`
+- `11_modelado_multibacteria_armd.ipynb`
+
+### Separacion formal entre V1 y V2
+
+Se decidio conservar todo lo anterior como V1 y crear una carpeta nueva para la V2.
+
+Estructura creada:
+
+- `modelo/V2/`
+- `modelo/V2/01_EXPLORACION_MULTIBACTERIA/`
+- `modelo/V2/02_CONSTRUCCION_DATASET/`
+- `modelo/V2/03_VISUALIZACION/`
+- `modelo/V2/04_MODELADO/`
+- `modelo/V2/05_RESULTADOS/`
+- `modelo/V2/DATOS_PROCESADOS/`
+- `modelo/V2/GRAFICAS/`
+
+Documentacion actualizada:
+
+- `modelo/V2/README.md`
+
+### V2 - ampliacion de entrenamiento a 500 configuraciones
+
+Notebook actualizado:
+
+- `modelo/V2/04_MODELADO/04_modelado_multibacteria_armd.ipynb`
+
+Cambios:
+
+- se amplio la busqueda de hiperparametros a 100 configuraciones por familia de modelo
+- modelos evaluados: `logistic_regression`, `decision_tree`, `random_forest`, `hist_gradient_boosting`, `xgboost`
+- total: 500 combinaciones de hiperparametros
+- con validacion cruzada de 3 folds, el notebook ejecuta 1500 fits internos
+- las configuraciones son deterministicas y cambian parametros con sentido tecnico: regularizacion, profundidad, hojas minimas, numero de arboles, learning rate, muestreo y regularizacion
+- XGBoost sigue intentando CUDA primero y cae a CPU si CUDA falla
+- el ultimo bloque del notebook ahora imprime explicitamente el mejor modelo final
+
+Salidas nuevas o actualizadas:
+
+- `modelo/V2/05_RESULTADOS/01_resultados_modelos_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/05_cv_detalle_todos_modelos_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/03_metricas_por_organismo_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/04_mejor_modelo_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/06_importancia_variables_mejor_modelo_v2_binario_balanceado_organismo_clase.csv`
+- graficas `13` a `18` en `modelo/V2/GRAFICAS/`
+
+Nota operativa:
+
+- este entrenamiento es mucho mas pesado que el anterior; si tarda demasiado, bajar `CONFIGURACIONES_POR_MODELO` en el notebook 04 reduce el costo sin cambiar el resto del flujo
+
+### V2 - evaluacion clinica ampliada y control de overfitting
+
+Notebook actualizado:
+
+- `modelo/V2/04_MODELADO/04_modelado_multibacteria_armd.ipynb`
+
+Resultados observados tras corrida de 500 configuraciones:
+
+- mejor modelo base por test F1 macro: `random_forest`
+- `test_f1_macro`: 0.8409881190147896
+- `test_balanced_accuracy`: 0.8424206080172182
+- `test_accuracy`: 0.8491509725223835
+- `test_mse_auxiliar`: 0.15084902747761655
+- mejores parametros base: `max_depth=None`, `max_features=sqrt`, `min_samples_leaf=5`, `n_estimators=400`
+- `hist_gradient_boosting` tuvo CV ligeramente mayor, pero test F1 macro ligeramente menor
+- brecha CV aproximada del mejor `random_forest`: 0.0608, riesgo moderado de overfitting, no extremo
+
+Cambios agregados al notebook:
+
+- tabla completa de scores clinicos para todos los modelos base
+- diagnostico de overfitting por brecha `mean_train_score - mean_test_score`
+- ajuste conservador de umbral para los 3 mejores modelos usando validacion interna, no el test
+- metricas adicionales: sensibilidad de `Resistant`, especificidad, PPV, NPV, ROC-AUC, PR-AUC, log loss, Brier score, MCC, kappa, MAE y MSE
+- graficas nuevas `19`, `20`, `21` y `22`
+
+Nuevas salidas esperadas al rerun del notebook 04:
+
+- `modelo/V2/05_RESULTADOS/07_scores_clinicos_todos_modelos_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/08_diagnostico_overfitting_cv_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/09_scores_umbral_optimizado_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/05_RESULTADOS/10_scores_clinicos_base_vs_umbral_v2_binario_balanceado_organismo_clase.csv`
+- `modelo/V2/GRAFICAS/19_v2_binario_overfitting_gap_balanceado_organismo_clase.png`
+- `modelo/V2/GRAFICAS/20_v2_binario_base_vs_umbral_balanceado_organismo_clase.png`
+- `modelo/V2/GRAFICAS/21_v2_binario_roc_todos_modelos_balanceado_organismo_clase.png`
+- `modelo/V2/GRAFICAS/22_v2_binario_pr_todos_modelos_balanceado_organismo_clase.png`
+
+### V2 - busqueda masiva de modelos e hiperparametros
+
+Notebook actualizado:
+
+- `modelo/V2/04_MODELADO/04_modelado_multibacteria_armd.ipynb`
+
+Cambio:
+
+- se amplio la busqueda a `14` familias de modelos
+- se subio a `200` configuraciones por familia
+- total estimado: `2800` combinaciones de hiperparametros
+- con CV de 3 folds: `8400` fits internos
+
+Modelos incluidos:
+
+- `logistic_regression`
+- `svm_linear`
+- `sgd_linear`
+- `knn_svd`
+- `complement_naive_bayes`
+- `gaussian_naive_bayes_svd`
+- `decision_tree`
+- `random_forest`
+- `extra_trees`
+- `adaboost_tree`
+- `gradient_boosting`
+- `hist_gradient_boosting`
+- `mlp_svd`
+- `xgboost`
+
+Notas metodologicas:
+
+- no existe probar literalmente todos los hiperparametros posibles porque muchos son continuos o tienen rangos infinitos
+- la busqueda queda amplia, deterministica y reproducible
+- si una grilla genera mas de 200 combinaciones, se toman 200 puntos distribuidos uniformemente por toda la grilla, no solo las primeras combinaciones
+- KNN, GaussianNB y MLP usan `TruncatedSVD` para reducir dimensionalidad antes de entrenar
+- ComplementNB usa preprocesamiento no negativo con `MinMaxScaler`
+- SVM con kernel RBF completo no se activa por defecto por riesgo alto de tiempo/RAM; se usa `LinearSVC`, mas apropiado para dataset grande y disperso
+- XGBoost conserva CUDA con fallback a CPU
+
+### V2 - notebook separado para cluster
+
+Notebook creado:
+
+- `modelo/V2/04_MODELADO/04B_modelado_cluster_multibacteria_armd.ipynb`
+
+Objetivo:
+
+- ejecutar la busqueda masiva de modelos V2 en un cluster de aproximadamente `60` hilos y `100GB` RAM
+- evitar sobreparalelizacion configurando hilos de forma explicita
+- guardar resultados por modelo para poder reanudar si el job se corta
+
+Configuracion por defecto:
+
+- `N_JOBS_GRID = 40`
+- `N_JOBS_MODELO = 1`
+- `N_JOBS_XGBOOST = 12`
+- `CONFIGURACIONES_POR_MODELO = 200`
+- `REANUDAR = True`
+
+Salidas:
+
+- `modelo/V2/05_RESULTADOS/cluster/`
+- `modelo/V2/GRAFICAS/cluster/`
+
+El notebook incluye:
+
+- instrucciones para JupyterLab
+- comando `jupyter nbconvert`
+- ejemplo de job `SLURM`
+- opcion `MODELOS_A_EJECUTAR` para correr todos los modelos o solo un subconjunto
+- metricas clinicas completas en el CSV principal: sensibilidad/especificidad de `Resistant`, PPV, NPV, MCC, kappa, MAE, MSE, ROC-AUC, PR-AUC, log loss y Brier score cuando aplica
+
+### GitHub - archivos necesarios para cluster
+
+Archivo actualizado:
+
+- `.gitignore`
+
+Cambios:
+
+- se sigue ignorando `data/` y `modelo/data/` para no subir datasets crudos pesados
+- se siguen ignorando resultados/modelos entrenados en `modelo/V2/05_RESULTADOS/`
+- se ignoran resultados de cluster en `modelo/V2/05_RESULTADOS/cluster/` y `modelo/V2/GRAFICAS/cluster/`
+- se permite subir el dataset final minimo para cluster:
+  - `modelo/V2/DATOS_PROCESADOS/09_dataset_v2_multibacteria_balanceado_organismo_clase.csv`
+- se permite subir `17_decision_variables_v2.csv` y CSV pequenos de catalogos/perfiles V2
+- se agrego `requirements-cluster.txt` para instalar dependencias en Ubuntu/Mac/cluster con `pip install -r requirements-cluster.txt`
+
+Nota:
+
+- el dataset final pesa cerca de 61 MB; GitHub lo permite porque esta por debajo del limite duro de 100 MB, pero puede mostrar advertencia por ser mayor a 50 MB
+
+### Implementacion de plan V2 multibacteria
+
+Se implementaron los notebooks principales de la V2:
+
+- `modelo/V2/02_CONSTRUCCION_DATASET/02_construccion_dataset_multibacteria.ipynb`
+- `modelo/V2/03_VISUALIZACION/03_visualizacion_multibacteria.ipynb`
+- `modelo/V2/04_MODELADO/04_modelado_multibacteria_armd.ipynb`
+
+El notebook `02` construye:
+
+- dataset completo V2
+- dataset balanceado V2
+- variables clinicas nuevas: ADI, vitals, labs
+- exposicion antibiotica previa `exp_prev_*`
+- comorbilidades reducidas `comorb_*`
+- indicadores de faltantes clinicos
+
+El notebook `03` genera graficas V2:
+
+- clases antes/despues del balanceo
+- distribucion por organismo
+- `susceptibility` por organismo
+- faltantes clinicos
+
+El notebook `04` entrena modelos:
+
+- Logistic Regression
+- Decision Tree
+- XGBoost
+
+Metrica principal:
+
+- `f1_macro`
+
+Tambien se actualizo:
+
+- `.gitignore` para evitar subir CSV/modelos grandes generados por V2
+- `modelo/V2/README.md` con el orden de ejecucion y nota de rendimiento
+
+### Imagenes post-preprocesamiento en V2
+
+El usuario pidio que despues del preprocesamiento se generen imagenes para evidenciar cambios importantes en los datos.
+
+Se actualizo:
+
+- `modelo/V2/02_CONSTRUCCION_DATASET/02_construccion_dataset_multibacteria.ipynb`
+- `modelo/V2/README.md`
+
+Nuevas imagenes generadas por el notebook `02`:
+
+- `modelo/V2/GRAFICAS/07_v2_preprocesamiento_cambio_susceptibility.png`
+- `modelo/V2/GRAFICAS/08_v2_preprocesamiento_cambio_organismos.png`
+- `modelo/V2/GRAFICAS/09_v2_preprocesamiento_faltantes_clinicos.png`
+
+Objetivo:
+
+- mostrar el cambio de distribucion de `susceptibility` antes/despues del balanceo
+- mostrar el cambio de distribucion por organismo antes/despues del balanceo
+- mostrar faltantes clinicos despues de integrar y limpiar variables
+
+### Correccion de robustez notebook 02 V2
+
+El usuario reporto errores en `modelo/V2/02_CONSTRUCCION_DATASET/02_construccion_dataset_multibacteria.ipynb`.
+
+No habia traceback guardado en el notebook, pero los artefactos principales ya existian, por lo que el problema mas probable era reejecucion parcial de celdas con `merge`.
+
+Correccion aplicada:
+
+- se agrego `normalizar_llaves`
+- se agrego `merge_idempotente`
+- los merges ahora eliminan columnas previas antes de volver a unir tablas
+- se normalizan llaves como texto para evitar errores por tipos distintos
+
+Objetivo:
+
+- evitar columnas duplicadas tipo `age_x`, `age_y`
+- permitir reejecutar celdas del notebook con menor riesgo
+
+Validacion:
+
+- el notebook sigue siendo JSON valido
+- todas las celdas de codigo pasan `ast.parse`
+
+### V2 cambia a clasificacion binaria
+
+El usuario decidio excluir la clase `Intermediate` por baja frecuencia y trabajar solo con:
+
+- `Susceptible`
+- `Resistant`
+
+Se actualizaron los notebooks V2:
+
+- `modelo/V2/01_EXPLORACION_MULTIBACTERIA/01_exploracion_multibacteria_armd.ipynb`
+- `modelo/V2/02_CONSTRUCCION_DATASET/02_construccion_dataset_multibacteria.ipynb`
+- `modelo/V2/03_VISUALIZACION/03_visualizacion_multibacteria.ipynb`
+- `modelo/V2/04_MODELADO/04_modelado_multibacteria_armd.ipynb`
+
+Cambios principales:
+
+- `Intermediate` se excluye desde la construccion del dataset
+- se crean datasets binarios completo, balanceado por clase y balanceado por organismo/clase
+- el dataset recomendado ahora es `09_dataset_v2_multibacteria_balanceado_organismo_clase.csv`
+- el notebook `03` diagnostica nulos, cardinalidad, correlacion, VIF y decision de variables
+- el notebook `04` usa validacion cruzada, busqueda de hiperparametros, varios modelos, MSE auxiliar y XGBoost CUDA con fallback CPU
+
+Validacion:
+
+- todos los notebooks V2 pasan validacion JSON
+- todas las celdas de codigo pasan `ast.parse`
+- `statsmodels`, `sklearn` y `xgboost` estan disponibles en el entorno
+
+### Ajuste de modelado V2: exp_prev obligatorio y 10 configuraciones por modelo
+
+El usuario confirmo que la exposicion antibiotica previa debe mantenerse porque es clinicamente importante.
+
+Se actualizo:
+
+- `modelo/V2/04_MODELADO/04_modelado_multibacteria_armd.ipynb`
+- `modelo/V2/README.md`
+
+Cambios:
+
+- el notebook `04` valida que existan columnas `exp_prev_*` antes de entrenar
+- si no existen, muestra error indicando que debe ejecutarse primero el notebook `02`
+- se reemplazo la busqueda aleatoria por `GridSearchCV`
+- cada familia de modelo evalua exactamente 10 configuraciones de hiperparametros
+- las configuraciones no son aleatorias: modifican regularizacion, complejidad, profundidad, numero de arboles, learning rate y parametros equivalentes segun el modelo
+- se guarda detalle de CV por modelo y un consolidado general
+
+Validacion:
+
+- notebook `04` pasa `ast.parse`
+- no quedan referencias a `RandomizedSearchCV`
+- `modelo/README.md`
+- `README.md`
+
+Regla nueva:
+
+- no tocar ni sobrescribir artefactos de V1
+- todo lo nuevo de multibacteria debe guardarse dentro de `modelo/V2/`
+
+### Inicio real de notebooks V2
+
+Se corrigio la decision de numeracion:
+
+- V2 empieza desde `01`, no desde `09`
+
+Notebook creado:
+
+- `modelo/V2/01_EXPLORACION_MULTIBACTERIA/01_exploracion_multibacteria_armd.ipynb`
+
+Contenido del notebook:
+
+- exploracion por streaming del archivo `microbiology_cultures_cohort.csv`
+- conteo de organismos con clases validas
+- seleccion inicial de 6 organismos para V2
+- graficas de filas validas por organismo
+- grafica de distribucion de `susceptibility` por organismo
+- exportacion de CSV y PNG dentro de `modelo/V2/`
+
+Documentacion actualizada:
+
+- `modelo/V2/README.md`
+
 

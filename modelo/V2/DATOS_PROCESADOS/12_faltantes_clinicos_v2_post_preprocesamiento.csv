@@ -1,0 +1,15 @@
+variable,porcentaje_nulos
+median_procalcitonin,97.04721249120092
+median_neutrophils,93.16285407310136
+median_lymphocytes,93.06035245736304
+median_lactate,85.71646159482634
+median_wbc,54.74162594731664
+median_bun,54.698814027490194
+median_cr,54.24311407318368
+median_resprate,44.20701209848389
+median_temp,34.15856053152645
+median_diasbp,28.13525273440555
+median_sysbp,28.105613712987243
+median_heartrate,28.0249297102374
+adi_score,20.64934156090613
+adi_state_rank,20.64934156090613

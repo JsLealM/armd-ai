@@ -25,6 +25,7 @@ dist/
 
 # Dataset crudo pesado
 modelo/data/
+data/
 
 
 # Si mas adelante quieres ignorar tambien imagenes sueltas antiguas de visualizacion,
@@ -32,3 +33,38 @@ modelo/data/
 
 # dataset
 modelo/data/
+
+# V2 genera datasets derivados grandes; por defecto se ignoran.
+# Excepcion: se permite subir el dataset final minimo para correr el notebook de cluster
+# y los CSV pequenos de decisiones/catalogos necesarios para documentar el flujo.
+modelo/V2/DATOS_PROCESADOS/*.csv
+!modelo/V2/DATOS_PROCESADOS/00_resumen_cantidad_bacterias.csv
+!modelo/V2/DATOS_PROCESADOS/01_resumen_organismos_candidatos.csv
+!modelo/V2/DATOS_PROCESADOS/02_organismos_seleccionados_v2.csv
+!modelo/V2/DATOS_PROCESADOS/03_decision_organismos_v2.csv
+!modelo/V2/DATOS_PROCESADOS/04_catalogo_exp_prev_v2.csv
+!modelo/V2/DATOS_PROCESADOS/05_catalogo_comorb_v2.csv
+!modelo/V2/DATOS_PROCESADOS/06_resumen_dataset_v2_completo.csv
+!modelo/V2/DATOS_PROCESADOS/09_dataset_v2_multibacteria_balanceado_organismo_clase.csv
+!modelo/V2/DATOS_PROCESADOS/09_resumen_balance_clases_v2.csv
+!modelo/V2/DATOS_PROCESADOS/10_resumen_balance_clases_v2.csv
+!modelo/V2/DATOS_PROCESADOS/11_balance_organismo_clase_v2.csv
+!modelo/V2/DATOS_PROCESADOS/12_faltantes_clinicos_v2_post_preprocesamiento.csv
+!modelo/V2/DATOS_PROCESADOS/13_perfil_variables_v2.csv
+!modelo/V2/DATOS_PROCESADOS/14_matriz_correlacion_numerica_v2.csv
+!modelo/V2/DATOS_PROCESADOS/15_correlacion_numericas_con_target_v2.csv
+!modelo/V2/DATOS_PROCESADOS/16_vif_variables_numericas_v2.csv
+!modelo/V2/DATOS_PROCESADOS/17_decision_variables_v2.csv
+
+# Resultados/modelos entrenados se generan localmente o en cluster.
+modelo/V2/05_RESULTADOS/*.csv
+modelo/V2/05_RESULTADOS/*.json
+modelo/V2/05_RESULTADOS/**/*.csv
+modelo/V2/05_RESULTADOS/**/*.json
+modelo/V2/05_RESULTADOS/*.pkl
+modelo/V2/05_RESULTADOS/*.joblib
+modelo/V2/05_RESULTADOS/**/*.pkl
+modelo/V2/05_RESULTADOS/**/*.joblib
+
+# Graficas de cluster generadas durante el entrenamiento masivo.
+modelo/V2/GRAFICAS/cluster/

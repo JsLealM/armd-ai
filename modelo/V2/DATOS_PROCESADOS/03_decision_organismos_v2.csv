@@ -1,0 +1,7 @@
+organism,decision,motivo
+ESCHERICHIA COLI,usar_v2_binario,organismo frecuente con volumen suficiente para Susceptible vs Resistant
+KLEBSIELLA PNEUMONIAE,usar_v2_binario,organismo frecuente con volumen suficiente para Susceptible vs Resistant
+STAPHYLOCOCCUS AUREUS,usar_v2_binario,organismo frecuente con volumen suficiente para Susceptible vs Resistant
+PROTEUS MIRABILIS,usar_v2_binario,organismo frecuente con volumen suficiente para Susceptible vs Resistant
+ENTEROCOCCUS SPECIES,usar_v2_binario,organismo frecuente con volumen suficiente para Susceptible vs Resistant
+PSEUDOMONAS AERUGINOSA,usar_v2_binario,organismo frecuente con volumen suficiente para Susceptible vs Resistant

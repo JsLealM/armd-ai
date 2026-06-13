@@ -1,0 +1,7 @@
+susceptibility,filas,dataset,porcentaje
+Susceptible,1063500,completo,82.49442668118755
+Resistant,190518,completo,14.77825405025528
+Intermediate,35160,completo,2.7273192685571734
+Susceptible,325609,balanceado,59.06342794225149
+Resistant,190518,balanceado,34.55876884454014
+Intermediate,35160,balanceado,6.377803213208365

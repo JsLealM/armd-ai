@@ -33,6 +33,11 @@ Area de analisis y modelado para:
 - datos procesados
 - imagenes y artefactos
 
+Dentro de `modelo/` el trabajo queda separado por versiones:
+
+- `V1`: carpetas originales con el pipeline centrado principalmente en `STAPHYLOCOCCUS AUREUS`
+- `V2`: nuevo pipeline multibacteria con mejores variables y preprocesamiento
+
 ## Documentos principales
 
 - `FRONTEND_ARCHITECTURE.md`
