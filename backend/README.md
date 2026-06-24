@@ -1,60 +1,68 @@
-# BACKEND
+# Backend ARMD-AI
 
-Este directorio se reserva para la API del proyecto en `FastAPI`.
+API en `FastAPI` para conectar frontend, modelo de susceptibilidad e historial de predicciones.
 
-Rol esperado:
+## Alcance actual
 
-- exponer endpoints
-- servir resultados consolidados si mas adelante se necesitan
-- conectar frontend con inferencia o artefactos del modelo
-- alojar servicios auxiliares como RAG o agentes de consulta
+- Modelo unico oficial: `XGBoost`.
+- Tarea: prediccion binaria de susceptibilidad antibiotica.
+- Clases: `Susceptible` y `Resistant`.
+- Explicabilidad: contrato compatible con `SHAP TreeExplainer`.
+- Persistencia: PostgreSQL mediante `base_datos_prediccion.sql` (driver `psycopg2`).
+- Historial: guarda predicciones anteriores con entradas, probabilidades y valores SHAP.
 
-Importante:
+## Roadmap
 
-- no se recomienda mezclar aqui notebooks ni scripts experimentales
-- esos deben vivir en `../modelo/`
+- Integrar RAG/agente clinico despues de cerrar el prototipo principal.
+- Conectar guias clinicas y respuestas conversacionales desde un modulo separado.
 
-## RAG en el backend
+## URLs del prototipo
 
-Si, el backend es un buen lugar para meter el componente RAG.
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000`
+- Prediccion orquestada y guardada: `POST http://localhost:8000/api/predict`
+- Servicio de modelo: `POST http://localhost:8000/ml/susceptibility`
+- Historial: `GET http://localhost:8000/api/history`
+- Detalle de historial: `GET http://localhost:8000/api/history/{prediccion_id}`
 
-La razon es que el RAG cumple mejor un rol de servicio que de notebook:
+## Base de datos (PostgreSQL)
 
-- recibe consultas
-- recupera contexto
-- arma prompts
-- llama modelo
-- devuelve respuesta al frontend
+La conexion se configura por variables de entorno (ver `backend/.env.example`); por defecto
+`postgresql://postgres:postgres@localhost:5432/armd_ai`. La forma mas rapida de levantar PostgreSQL
+es con el `docker-compose.yml` de la raiz, que ademas auto-carga el esquema:
 
-### Recomendacion
-
-Separarlo dentro del backend como modulo propio.
-
-Ejemplo de estructura:
-
-```text
-backend/
-  app/
-    api/
-    core/
-    services/
-      rag/
-        retriever.py
-        embeddings.py
-        prompt_builder.py
-        agent.py
-    main.py
+```bash
+docker compose up -d postgres
 ```
 
-### Relacion con `modelo/`
+Al iniciar, el backend ejecuta `base_datos_prediccion.sql` si las tablas no existen (idempotente).
 
-Lo correcto es:
+## Ejecucion
 
-- `modelo/` produce artefactos, datasets, metricas y conocimiento del proyecto
-- `backend/` consume lo necesario para exponer servicios
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env   # opcional: ajustar credenciales de PostgreSQL
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-Si el RAG necesita documentos del proyecto, puede leerlos desde:
+## Artefacto del modelo (XGBoost + SHAP real)
 
-- `../modelo/`
+El backend carga un bundle entrenado sobre el **dataset final V2** usando **todas sus variables
+predictoras (64 features)**; solo se excluyen los 4 identificadores y el target `susceptibility`:
 
-pero la logica del servicio debe vivir en `backend/`.
+```text
+modelo/V2/06_ARTEFACTOS/xgboost_susceptibility_v2.joblib
+```
+
+Se genera (con el kernel `Python (armd-ai)`) ejecutando el notebook de exportacion:
+
+```text
+modelo/V2/04_MODELADO/04E_exportar_modelo_api.ipynb
+```
+
+El bundle incluye `pipeline` (ColumnTransformer + XGBClassifier) y `feature_columns`.
+Con el artefacto presente, `app/services/susceptibility_service.py` calcula **SHAP real**
+con `shap.TreeExplainer` y deriva internamente los indicadores `missing_median_*`
+(ver `app/feature_spec.py`). Si el artefacto aun no existe, el backend responde con una
+prediccion demo compatible con el contrato para poder probar frontend, historial y base de datos.

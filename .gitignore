@@ -68,3 +68,22 @@ modelo/V2/05_RESULTADOS/**/*.joblib
 
 # Graficas de cluster generadas durante el entrenamiento masivo.
 modelo/V2/GRAFICAS/cluster/
+
+# Skills/archivos que sirven solo a los agentes de codigo (no subir, se conservan en disco)
+.agents/
+.agent/
+.claude/
+**/.agents/
+**/.agent/
+
+# Basura de Word (locks y respaldos)
+~$*
+*.backup*.docx
+
+# Bases de datos locales (el motor oficial es PostgreSQL)
+*.sqlite3
+
+# Nota: el dataset final (modelo/V2/DATOS_PROCESADOS/09_*.csv) y los modelos
+# (modelo/V2/06_ARTEFACTOS/*.joblib) SI se versionan a proposito, para que el
+# proyecto corra tras clonar sin reentrenar. Los artefactos exploratorios no se usan.
+modelo/V2/06_ARTEFACTOS/*_exploratorio*

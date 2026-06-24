@@ -1,0 +1,88 @@
+# ============================================================================
+# ARMD-AI :: Stack completo con Docker Compose
+# Levanta TODO con un comando:  docker compose up --build
+#
+#   - postgres : base de datos (auto-carga base_datos_prediccion.sql)
+#   - backend  : API FastAPI (XGBoost / Regresion Logistica + SHAP)
+#   - frontend : React + Vite (http://localhost:5173)
+#   - adminer  : UI web opcional para inspeccionar la base (http://localhost:8080)
+#
+# El navegador (en tu PC) accede a backend en http://localhost:8000 y frontend
+# en http://localhost:5173. El backend habla con postgres por el nombre de servicio.
+# ============================================================================
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: armd_ai_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: armd_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - armd_ai_pgdata:/var/lib/postgresql/data
+      # Auto-inicializa el esquema en el primer arranque (volumen vacio).
+      - ./base_datos_prediccion.sql:/docker-entrypoint-initdb.d/01_base_datos_prediccion.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d armd_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: armd_ai_backend
+    restart: unless-stopped
+    environment:
+      # Dentro de la red de compose, la base se llama 'postgres' (no localhost).
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: armd_ai
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      FRONTEND_URL: http://localhost:5173
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      # Monta TODO el repo: el backend necesita el codigo, base_datos_prediccion.sql
+      # y los artefactos del modelo en modelo/V2/06_ARTEFACTOS/.
+      - ./:/workspace
+    working_dir: /workspace/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: armd_ai_frontend
+    restart: unless-stopped
+    environment:
+      # El navegador (host) pega al backend por el puerto publicado.
+      VITE_API_BASE_URL: http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      # Volumen anonimo: conserva el node_modules de Linux del contenedor
+      # (no usa el de Windows del host).
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  adminer:
+    image: adminer:4
+    container_name: armd_ai_adminer
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  armd_ai_pgdata:

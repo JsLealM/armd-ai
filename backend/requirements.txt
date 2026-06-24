@@ -1,0 +1,17 @@
+# --- Dependencias del servidor web (instalar SIEMPRE) ---
+fastapi
+uvicorn[standard]
+pydantic
+psycopg2-binary
+python-dotenv
+
+# --- Librerias de modelo ---
+# Ya vienen en el entorno `armd-ai` (con ellas se entreno y exporto el modelo).
+# Se dejan SIN version fija para NO degradar las versiones con las que se creo el
+# artefacto (degradar xgboost/scikit-learn puede romper la carga del .joblib).
+joblib
+numpy
+pandas
+scikit-learn
+xgboost
+shap
